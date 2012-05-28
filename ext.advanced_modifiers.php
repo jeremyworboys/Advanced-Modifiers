@@ -1,14 +1,19 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Advanced Modifiers for Exp:resso's Store
+ * Copyright (c) 2012 Jeremy Worboys <jeremy@complexcompulsions.com>
+ */
+
 Class Advanced_modifiers_ext {
 
-    var $name            = 'Advanced Modifiers';
-    var $version         = '1.0';
-    var $description     = 'Extends the way you can define price modifiers in Exp:resso\'s Store Module.';
-    var $settings_exist  = 'n';
-    var $docs_url        = ''; // 'http://expressionengine.com/user_guide/';
+    public $name            = 'Advanced Modifiers';
+    public $version         = '1.0';
+    public $description     = 'Extends the way you can define price modifiers in Exp:resso\'s Store Module.';
+    public $settings_exist  = 'n';
+    public $docs_url        = ''; // 'http://expressionengine.com/user_guide/';
 
-    var $settings        = array();
+    protected $settings        = array();
 
 
     /**
@@ -16,7 +21,7 @@ Class Advanced_modifiers_ext {
      *
      * @param  mixed   Settings array or empty string if none exist.
      */
-    function __construct($settings='')
+    public function __construct($settings='')
     {
         $this->EE =& get_instance();
 
@@ -34,7 +39,7 @@ Class Advanced_modifiers_ext {
      *
      * @return void
      */
-    function activate_extension()
+    public function activate_extension()
     {
         $this->settings = array();
 
@@ -49,6 +54,20 @@ Class Advanced_modifiers_ext {
         );
 
         $this->EE->db->insert('extensions', $data);
+    }
+
+
+    /**
+     * Disable Extension
+     *
+     * This method removes information from the exp_extensions table
+     *
+     * @return void
+     */
+    public function disable_extension()
+    {
+        $this->EE->db->where('class', __CLASS__);
+        $this->EE->db->delete('extensions');
     }
 }
 // END CLASS
