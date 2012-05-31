@@ -29,6 +29,8 @@ class Advanced_modifiers_ext
     {
         $this->EE =& get_instance();
 
+        $this->EE->load->library('advanced_modifiers_parser');
+
         $this->settings = $settings;
     }
 
@@ -37,8 +39,6 @@ class Advanced_modifiers_ext
      * Activate Extension
      *
      * This function enters the extension into the exp_extensions table
-     *
-     * @return void
      */
     public function activate_extension()
     {
@@ -62,8 +62,6 @@ class Advanced_modifiers_ext
      * Disable Extension
      *
      * This method removes information from the exp_extensions table
-     *
-     * @return void
      */
     public function disable_extension()
     {
@@ -79,12 +77,11 @@ class Advanced_modifiers_ext
      * where we inject our code before the product is displayed to the user.
      *
      * @param  array     The product that we are modifying.
-     *
      * @return array     The modified product.
      */
     public function store_process_product_tax($product)
     {
-        return $product;
+        return $this->EE->advanced_modifiers_parser->parse($product);
     }
 }
 // END CLASS
