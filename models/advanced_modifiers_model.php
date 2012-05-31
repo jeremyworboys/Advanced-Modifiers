@@ -95,8 +95,33 @@ class Advanced_modifiers_model extends CI_Model
                 $result[$mod_id]['options'][$opt_id] = $opt_data;
             }
         }
-
         return $result;
+    }
+
+
+    /**
+     * Get Advanced Modifiers
+     *
+     * This method gets the advanced modifiers for a product.
+     *
+     * @param  int       The entry ID of the product to retrieve.
+     * @return array     The modifiers associated with the product.
+     */
+    public function get_advanced_modifiers($entry_id)
+    {
+        $field_id = $this->db
+            ->select('field_id')
+            ->from('channel_fields')
+            ->where('field_type', 'advanced_modifiers')
+            ->get()->row()->field_id;
+
+        $advanced_modifiers = $this->db
+            ->select('field_id_'.$field_id)
+            ->from('channel_data')
+            ->where('entry_id', $entry_id)
+            ->get()->row_array();
+
+        return unserialize($advanced_modifiers['field_id_'.$field_id]);
     }
 }
 // END CLASS
