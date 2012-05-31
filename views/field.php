@@ -1,4 +1,7 @@
 
+    <p style="margin-bottom:0.5em;">You need to enter the modifiers in the <strong>Product Details</strong> area and submit before they will become available here.</p>
+
+    <?php if (isset($product) && !empty($product['modifiers'])): ?>
     <table class="store_ft">
         <thead>
             <tr>
@@ -8,20 +11,15 @@
             </tr>
         </thead>
         <tbody>
-        <?php if (empty($product['modifiers'])): ?>
-            You need to enter the modifiers in the <strong>Product Details</strong> area and submit before they will become available here.
-        <?php endif; ?>
         <?php foreach ($product['modifiers'] as $mod): ?>
             <?php if ($mod['mod_type'] === 'text') { continue; } ?>
             <tr>
-                <td rowspan="<?php echo count($mod['options']) ?>">
-                    <?php echo $mod['mod_name'] ?>
-                </td>
+                <td rowspan="<?= count($mod['options']) ?>"><?= $mod['mod_name'] ?></td>
                 <?php $first_line = true; ?>
-                <?php foreach ($mod['options'] as $opt): ?>
-                <?php if (!$first_line): ?><tr><?php endif ?>
-                    <td style="border-left: 1px solid #d1d5de;"><?php echo $opt['opt_name'] ?></td>
-                    <td class="store_ft_text"><?= form_input('opt_prefix'.'[opt_price_mod]', $opt['adv_mod'], 'placeholder="Use Default" autocomplete="off"') ?></td>
+                <?php foreach ($mod['options'] as $opt_id => $opt): ?>
+                <?= $first_line ? '' : '<tr>' ?>
+                    <td style="border-left: 1px solid #d1d5de;"><?= $opt['opt_name'] ?></td>
+                    <td class="store_ft_text"><?= form_input("advanced_modifiers_field[options][{$opt_id}]", $advanced_modifiers['options'][$opt_id], 'placeholder="Use Default" autocomplete="off"') ?></td>
                 </tr>
                 <?php $first_line = false; ?>
                 <?php endforeach ?>
@@ -29,3 +27,4 @@
         <?php endforeach ?>
         </tbody>
     </table>
+    <?php endif ?>

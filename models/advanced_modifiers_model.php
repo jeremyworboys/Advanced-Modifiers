@@ -35,7 +35,6 @@ class Advanced_modifiers_model extends CI_Model
         }
 
         $product['modifiers'] = $this->get_product_modifiers($entry_id);
-        $product['modifiers'] = $this->get_advanced_modifiers($product['modifiers']);
 
         return $product;
     }
@@ -98,47 +97,6 @@ class Advanced_modifiers_model extends CI_Model
         }
 
         return $result;
-    }
-
-
-    /**
-     * Get Advanced Modifiers
-     *
-     * This method retrieves the advanced modifiers associated with a product.
-     *
-     * @param  array     The standard modifiers associated with the product.
-     * @return array     The advanced modifiers associated with the product.
-     */
-    public function get_advanced_modifiers($modifiers)
-    {
-        foreach ($modifiers as &$mod) {
-            if ($mod['mod_type'] === 'text') { continue; }
-            foreach ($mod['options'] as &$opt) {
-                $opt['adv_mod'] = $this->_get_advanced_modifier($mod['entry_id'], $mod['product_mod_id'], $opt['product_opt_id']);
-            }
-        }
-
-        return $modifiers;
-    }
-
-
-    /**
-     * Get Product Modifiers
-     *
-     * This method access the store_product_modifiers table and retrieves a
-     * product's standard modifiers.
-     *
-     * @access private
-     *
-     * @param  int       The entry ID of the product whose advanced modifier to
-     *                   retrieve.
-     * @param  int       The modifier ID of the modifier to retrieve.
-     * @param  int       The option ID of the modifier to retrieve.
-     * @return string    The advanced modifier.
-     */
-    private function _get_advanced_modifier($entry_id, $modifier_id, $option_id)
-    {
-        return "";
     }
 }
 // END CLASS
