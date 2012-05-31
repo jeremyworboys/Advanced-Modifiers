@@ -18,6 +18,17 @@ class Advanced_modifiers_ft extends EE_Fieldtype
 
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->EE->load->model('advanced_modifiers_model');
+    }
+
+
+    /**
      * Display Field
      *
      * This method runs when displaying the field on the publish page in the CP.
@@ -28,7 +39,16 @@ class Advanced_modifiers_ft extends EE_Fieldtype
      */
     public function display_field($field_data)
     {
-        return $this->EE->load->view('field', $field_data, TRUE);
+        $data = array();
+
+        $entry_id = (int)$this->EE->input->get('entry_id');
+
+        $product = $this->EE->advanced_modifiers_model->find_product_by_id($entry_id);
+        if (!empty($product)) {
+            $data['product'] = $product;
+        }
+
+        return $this->EE->load->view('field', $data, TRUE);
     }
 }
 // END CLASS

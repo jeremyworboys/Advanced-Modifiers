@@ -38,9 +38,6 @@ class Advanced_modifiers_ext
      *
      * This function enters the extension into the exp_extensions table
      *
-     * @see    http://codeigniter.com/user_guide/database/index.html for more
-     *         information on the db class.
-     *
      * @return void
      */
     public function activate_extension()
