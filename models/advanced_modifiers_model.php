@@ -17,7 +17,6 @@ class Advanced_modifiers_model extends CI_Model
      * This method access the store_products table and retrieves a product.
      *
      * @param  int       The entry ID of the product to retrieve.
-     *
      * @return mixed     The product or false if one is not found.
      */
     public function find_product_by_id($entry_id)
@@ -42,6 +41,15 @@ class Advanced_modifiers_model extends CI_Model
     }
 
 
+    /**
+     * Get Product Modifiers
+     *
+     * This method access the store_product_modifiers table and retrieves a
+     * product's standard modifiers.
+     *
+     * @param  int       The entry ID of the product to retrieve.
+     * @return array     The modifiers associated with the product.
+     */
     public function get_product_modifiers($entry_id)
     {
         // store_products_model::get_product_modifiers
@@ -93,6 +101,14 @@ class Advanced_modifiers_model extends CI_Model
     }
 
 
+    /**
+     * Get Advanced Modifiers
+     *
+     * This method retrieves the advanced modifiers associated with a product.
+     *
+     * @param  array     The standard modifiers associated with the product.
+     * @return array     The advanced modifiers associated with the product.
+     */
     public function get_advanced_modifiers($modifiers)
     {
         foreach ($modifiers as &$mod) {
@@ -106,7 +122,21 @@ class Advanced_modifiers_model extends CI_Model
     }
 
 
-    public function _get_advanced_modifier($entry_id, $modifier_id, $option_id)
+    /**
+     * Get Product Modifiers
+     *
+     * This method access the store_product_modifiers table and retrieves a
+     * product's standard modifiers.
+     *
+     * @access private
+     *
+     * @param  int       The entry ID of the product whose advanced modifier to
+     *                   retrieve.
+     * @param  int       The modifier ID of the modifier to retrieve.
+     * @param  int       The option ID of the modifier to retrieve.
+     * @return string    The advanced modifier.
+     */
+    private function _get_advanced_modifier($entry_id, $modifier_id, $option_id)
     {
         return "";
     }
