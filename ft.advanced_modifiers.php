@@ -35,7 +35,7 @@ class Advanced_modifiers_ft extends EE_Fieldtype
      *
      * @param  array     The data previously entered into this field.
      *
-     * @return strong    The HTML output to be displayed for this field.
+     * @return string    The HTML output to be displayed for this field.
      */
     public function display_field($field_data)
     {

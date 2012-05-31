@@ -11,6 +11,15 @@
 class Advanced_modifiers_model extends CI_Model
 {
 
+    /**
+     * Find Product by ID
+     *
+     * This method access the store_products table and retrieves a product.
+     *
+     * @param  int       The entry ID of the product to retrieve.
+     *
+     * @return mixed     The product or false if one is not found.
+     */
     public function find_product_by_id($entry_id)
     {
         // store_products_model::find_by_id
@@ -23,13 +32,15 @@ class Advanced_modifiers_model extends CI_Model
             ->get()->row_array();
 
         if (empty($product)) {
-            return FALSE;
+            return false;
         }
 
-        $product['modifiers'] = $this->get_product_modifiers($product['entry_id']);
+        $product['modifiers'] = $this->get_product_modifiers($entry_id);
+        $product['modifiers'] = $this->get_advanced_modifiers($product['modifiers']);
 
         return $product;
     }
+
 
     public function get_product_modifiers($entry_id)
     {
@@ -71,7 +82,7 @@ class Advanced_modifiers_model extends CI_Model
                     'opt_order' => $row['opt_order']
                 );
 
-                $opt_data['opt_price_mod_val'] = store_round_currency($row['opt_price_mod'], TRUE);
+                $opt_data['opt_price_mod_val'] = store_round_currency($row['opt_price_mod'], true);
                 $opt_data['opt_price_mod'] = empty($opt_data['opt_price_mod_val']) ? '' : store_format_currency($opt_data['opt_price_mod_val'], TRUE);
 
                 $result[$mod_id]['options'][$opt_id] = $opt_data;
@@ -81,5 +92,23 @@ class Advanced_modifiers_model extends CI_Model
         return $result;
     }
 
+
+    public function get_advanced_modifiers($modifiers)
+    {
+        foreach ($modifiers as &$mod) {
+            if ($mod['mod_type'] === 'text') { continue; }
+            foreach ($mod['options'] as &$opt) {
+                $opt['adv_mod'] = $this->_get_advanced_modifier($mod['entry_id'], $mod['product_mod_id'], $opt['product_opt_id']);
+            }
+        }
+
+        return $modifiers;
+    }
+
+
+    public function _get_advanced_modifier($entry_id, $modifier_id, $option_id)
+    {
+        return "";
+    }
 }
 // END CLASS
