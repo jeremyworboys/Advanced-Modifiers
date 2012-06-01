@@ -33,20 +33,11 @@ class Advanced_modifiers_parser
      */
     public function parse($product)
     {
-        $advanced_modifiers = $this->EE->advanced_modifiers_model->get_advanced_modifiers($product['entry_id']);
-
         if (!isset($product['modifiers'])) {
             return $product;
         }
 
-        foreach ($product['modifiers'] as &$mod) {
-            if ($mod['mod_type'] === 'text') { continue; }
-            foreach ($mod['options'] as $opt_id => &$opt) {
-                if (isset($advanced_modifiers[$opt_id])) {
-                    $opt['adv_mod'] = $advanced_modifiers[$opt_id];
-                }
-            }
-        }
+        $this->_add_modifiers($product);
 
         // We need to re-evaluate the product's price with these new modifiers
 
@@ -63,6 +54,29 @@ class Advanced_modifiers_parser
         $product['on_sale']           = FALSE;
 
         return $product;
+    }
+
+
+    /**
+     * Add Modifiers
+     *
+     * This method retrieves and attaches the advanced modifiers to a product
+     * by reference.
+     *
+     * @param  &array    The product to add the modifiers to.
+     */
+    private function _add_modifiers(&$product)
+    {
+        $advanced_modifiers = $this->EE->advanced_modifiers_model->get_advanced_modifiers($product['entry_id']);
+
+        foreach ($product['modifiers'] as &$mod) {
+            if ($mod['mod_type'] === 'text') { continue; }
+            foreach ($mod['options'] as $opt_id => &$opt) {
+                if (isset($advanced_modifiers[$opt_id])) {
+                    $opt['adv_mod'] = $advanced_modifiers[$opt_id];
+                }
+            }
+        }
     }
 }
 // END CLASS
