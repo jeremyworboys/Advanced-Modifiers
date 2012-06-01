@@ -70,7 +70,7 @@ class Advanced_modifiers_parser
         $advanced_modifiers = $this->EE->advanced_modifiers_model->get_advanced_modifiers($product['entry_id']);
 
         foreach ($product['modifiers'] as &$mod) {
-            if ($mod['mod_type'] === 'text') { continue; }
+            if (!in_array($mod['mod_type'], array('var', 'var_single_sku')) { continue; }
             foreach ($mod['options'] as $opt_id => &$opt) {
                 if (isset($advanced_modifiers[$opt_id])) {
                     $opt['adv_mod'] = $advanced_modifiers[$opt_id];
