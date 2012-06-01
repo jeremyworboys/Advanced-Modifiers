@@ -37,8 +37,11 @@ class Advanced_modifiers_parser
             return $product;
         }
 
-        $this->_add_modifiers($product);
+        $interpret = $this->_add_modifiers($product);
 
+        if ($interpret) {
+            return $product;
+        }
         // We need to re-evaluate the product's price with these new modifiers
 
         $product['regular_price_val'] = (float)$product['regular_price'];
@@ -64,19 +67,24 @@ class Advanced_modifiers_parser
      * by reference.
      *
      * @param  &array    The product to add the modifiers to.
+     * @return bool      Whether the product needs to be interpreted.
      */
     private function _add_modifiers(&$product)
     {
+        $interpret = false;
         $advanced_modifiers = $this->EE->advanced_modifiers_model->get_advanced_modifiers($product['entry_id']);
 
         foreach ($product['modifiers'] as &$mod) {
             if (!in_array($mod['mod_type'], array('var', 'var_single_sku')) { continue; }
+            $interpret = true;
             foreach ($mod['options'] as $opt_id => &$opt) {
                 if (isset($advanced_modifiers[$opt_id])) {
                     $opt['adv_mod'] = $advanced_modifiers[$opt_id];
                 }
             }
         }
+
+        return $interpret;
     }
 }
 // END CLASS
