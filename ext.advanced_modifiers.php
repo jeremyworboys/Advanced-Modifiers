@@ -19,6 +19,11 @@ class Advanced_modifiers_ext
 
     protected $settings     = array();
 
+    private $hooks          = array(
+                                'store_process_product_tax',
+                                'template_post_parse'
+                            );
+
 
     /**
      * Constructor
@@ -44,17 +49,17 @@ class Advanced_modifiers_ext
     {
         $this->settings = array();
 
-        $data = array(
-            'class'     => __CLASS__,
-            'method'    => 'store_process_product_tax',
-            'hook'      => 'store_process_product_tax',
-            'settings'  => serialize($this->settings),
-            'priority'  => 10,
-            'version'   => $this->version,
-            'enabled'   => 'y'
-        );
-
-        $this->EE->db->insert('extensions', $data);
+        foreach ($this->hooks as $hook) {
+            $this->EE->db->insert('extensions', array(
+                'class'     => __CLASS__,
+                'method'    => $hook,
+                'hook'      => $hook,
+                'settings'  => serialize($this->settings),
+                'priority'  => 10,
+                'version'   => $this->version,
+                'enabled'   => 'y'
+            ));
+        }
     }
 
 
@@ -65,8 +70,9 @@ class Advanced_modifiers_ext
      */
     public function disable_extension()
     {
-        $this->EE->db->where('class', __CLASS__);
-        $this->EE->db->delete('extensions');
+        $this->EE->db
+            ->where('class', __CLASS__);
+            ->delete('extensions');
     }
 
 
@@ -82,6 +88,24 @@ class Advanced_modifiers_ext
     public function store_process_product_tax($product)
     {
         return $this->EE->advanced_modifiers_parser->parse($product);
+    }
+
+
+    /**
+     * Template Post Parse
+     *
+     * Tests to see if there is a product on this page and if so injects the
+     * JavaScript needed to override the updating of live classes.
+     *
+     * @param  string    The template string after template tags have been
+     *                   parsed.
+     * @param  bool      Whether or not the current template is an embed.
+     * @param  int       The site_id of the current template.
+     * @return string    The template after modification.
+     */
+    public function template_post_parse($template, $sub, $site_id)
+    {
+        return $template;
     }
 }
 // END CLASS
