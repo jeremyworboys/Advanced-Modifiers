@@ -11,7 +11,6 @@
 class Advanced_modifiers_parser
 {
 
-    private $mod_map;
     private $modifier_types = array('var', 'var_single_sku');
 
     /**
@@ -26,40 +25,39 @@ class Advanced_modifiers_parser
 
 
     /**
-     * Parse
+     * Update Product
      *
-     * This method interprets the advanced modifier and returns a product with
-     * all values updated.
+     * This method updates the prices and display values for the product.
      *
-     * @param  array     The product to parse.
-     * @return float     The value to modify the item price by.
+     * @param  array     The product to update.
+     * @return array     The product after bing updated.
      */
-    public function parse($product)
+    public function update_product($product)
     {
         if (!isset($product['modifiers'])) {
             return $product;
         }
 
-        $interpret = $this->_add_advanced_modifiers($product);
+        $cart = isset($product['mod_values']);
+        $this->_add_advanced_modifiers($product, $cart);
 
-        if ($interpret) {
-            return $product;
-        }
+        $price = $this->_calculate_price($product);
 
-        $this->_update_modifier_map($product);
-        $this->_update_modifiers($product);
+        $tax_rate = $product['tax_exempt'] ? 0 : ($product['price_inc_tax_val'] / $product['price_val']) - 1;
 
-        $product['regular_price_val'] = (float)$product['regular_price'];
-        $product['regular_price']     = store_format_currency($product['regular_price_val']);
-        $product['sale_price_val']    = (float)$product['sale_price'];
-        $product['sale_price']        = store_format_currency($product['sale_price_val']);
-        $product['handling_val']      = (float)$product['handling'];
-        $product['handling']          = store_format_currency($product['handling_val']);
-        $product['price_val']         = $product['regular_price_val'];
-        $product['price']             = $product['regular_price'];
-        $product['free_shipping']     = $product['free_shipping'] == 'y';
-        $product['tax_exempt']        = $product['tax_exempt'] == 'y';
-        $product['on_sale']           = FALSE;
+        $product['price_val']                 = $price;
+        $product['price_inc_tax_val']         = store_round_currency($product['price_val'] * (1 + $tax_rate));
+        $product['price_inc_tax']             = store_format_currency($product['price_inc_tax_val']);
+        $product['regular_price_inc_tax_val'] = store_round_currency($product['regular_price_val'] * (1 + $tax_rate));
+        $product['regular_price_inc_tax']     = store_format_currency($product['regular_price_inc_tax_val']);
+        $product['sale_price_inc_tax_val']    = store_round_currency($product['sale_price_val'] * (1 + $tax_rate));
+        $product['sale_price_inc_tax']        = store_format_currency($product['sale_price_inc_tax_val']);
+
+        $product['you_save_val']              = $product['regular_price_val'] - $product['price_val'];
+        $product['you_save_inc_tax_val']      = $product['regular_price_inc_tax_val'] - $product['price_inc_tax_val'];
+        $product['you_save']                  = store_format_currency($product['you_save_val']);
+        $product['you_save_inc_tax']          = store_format_currency($product['you_save_inc_tax_val']);
+        $product['you_save_percent']          = empty($product['regular_price_val']) ? 0 : round(($product['regular_price_val'] - $product['price_val']) / $product['regular_price_val'] * 100);
 
         return $product;
     }
@@ -72,64 +70,90 @@ class Advanced_modifiers_parser
      * by reference.
      *
      * @param  &array    The product to add the modifiers to.
-     * @return bool      Whether the product needs to be interpreted.
+     * @param  boolean   Whether the product is in the cart.
      */
-    private function _add_advanced_modifiers(&$product)
+    private function _add_advanced_modifiers(&$product, $cart)
     {
-        $interpret = false;
         $advanced_modifiers = $this->EE->advanced_modifiers_model->get_advanced_modifiers($product['entry_id']);
 
-        foreach ($product['modifiers'] as &$mod) {
-            if (!in_array($mod['mod_type'], $this->modifier_types)) { continue; }
-            $interpret = true;
-            foreach ($mod['options'] as $opt_id => &$opt) {
-                if (isset($advanced_modifiers[$opt_id])) {
-                    $opt['adv_mod'] = $advanced_modifiers[$opt_id];
+        if ($cart) {
+            foreach ($product['modifiers'] as &$mod) {
+                if (!in_array($mod['modifier_type'], $this->modifier_types)) { continue; }
+                $mod['options'] = array();
+                foreach ($advanced_modifiers as $opt_id => $adv_mod) {
+                    if ($advanced_modifiers[$opt_id]) {
+                        $mod['options'][$opt_id]['adv_mod'] = $advanced_modifiers[$opt_id];
+                    }
+                    elseif ($mod['price_mod_val']) {
+                        $mod['options'][$opt_id]['adv_mod'] = (string)$opt['opt_price_mod_val'];
+                    }
+                    else {
+                        $mod['options'][$opt_id]['adv_mod'] = '0';
+                    }
                 }
             }
         }
-
-        return $interpret;
-    }
-
-
-    /**
-     * Update Modifier Map
-     *
-     * This method updates the modifier map used to find modifier ID's and other
-     * details by name.
-     *
-     * @param  array     The product to update the modifier map from.
-     */
-    private function _update_modifier_map($product)
-    {
-        foreach ($product['modifiers'] as $index => $mod) {
-            $map = new stdClass();
-
-            $map->id    = $mod['product_mod_id'];
-            $map->name  = $mod['mod_name'];
-            $map->index = $index;
-
-            $s_name = $this->_standardize_name($mod['mod_name']);
-            $this->mod_map->$s_name = $map;
+        else {
+            foreach ($product['modifiers'] as $mod_id => &$mod) {
+                if (!in_array($mod['mod_type'], $this->modifier_types)) { continue; }
+                $first_opt = true;
+                $mod['modifier_name'] = $mod['mod_name'];
+                $mod['modifier_type'] = $mod['mod_type'];
+                foreach ($mod['options'] as $opt_id => &$opt) {
+                    if ($first_opt) {
+                        $mod['option_id'] = $opt_id;
+                        $mod['modifier_value'] = $opt['opt_name'];
+                        $first_opt = false;
+                    }
+                    if (isset($advanced_modifiers[$opt_id])) {
+                        if ($advanced_modifiers[$opt_id]) {
+                            $opt['adv_mod'] = $advanced_modifiers[$opt_id];
+                        }
+                        elseif ($opt['opt_price_mod_val']) {
+                            $opt['adv_mod'] = (string)$opt['opt_price_mod_val'];
+                        }
+                        else {
+                            $opt['adv_mod'] = '0';
+                        }
+                    }
+                }
+            }
         }
     }
 
 
     /**
-     * Update Modifiers
+     * Calculate Price
      *
-     * This method uses the advanced modifiers to update the value applies to
-     * the standard modifiers.
+     * This method uses the advanced modifiers to calculate the price of the
+     * product based on selected modifiers.
      *
-     * @param  &array    The product to update the modifiers on.
+     * @param  array     The product whose price to calculate.
+     * @return float     The calculated price of the product.
      */
-    private function _update_modifiers(&$product)
+    private function _calculate_price(&$product)
     {
-        foreach ($product['modifiers'] as &$mod) {
-            if (!in_array($mod['mod_type'], $this->modifier_types)) { continue; }
-            // THIS IS WHERE SOMETHING NEEDS TO HAPPEN
+        $price = $product['price_val'];
+        $mod_map = array();
+        foreach ($product['modifiers'] as $mod_id => $mod) {
+            if (!in_array($mod['modifier_type'], $this->modifier_types)) { continue; }
+            $opt_id = $mod['option_id'];
+            $option = $mod['options'][$opt_id];
+            if ($option) {
+                $s_name = $this->_standardize_name($mod['modifier_name']);
+                $mod_map[$s_name] = $mod['modifier_value'];
+            }
         }
+        foreach ($product['modifiers'] as $mod_id => $mod) {
+            if (!in_array($mod['modifier_type'], $this->modifier_types)) { continue; }
+            $opt_id = $mod['option_id'];
+            $option = $mod['options'][$opt_id];
+            if ($option) {
+                $price += $this->_evaluate_advanced_modifier($option['adv_mod'], $mod_map);
+            }
+        }
+
+        return $price;
     }
 
 
@@ -145,6 +169,29 @@ class Advanced_modifiers_parser
     private function _standardize_name($name)
     {
         return preg_replace('/[^A-Za-z0-9-]+/', '_', strtolower($name));
+    }
+
+
+    /**
+     * Evaluate Advanced Modifier
+     *
+     * This method evaluates an advanced modifier expression and returns a price
+     * value.
+     *
+     * @param  string    The advanced modifier to evaluate.
+     * @param  array     A map of modifier_name => modifier_value.
+     * @return float     The evaluated price of the advanced modifier.
+     */
+    private function _evaluate_advanced_modifier($adv_mod, $mod_map)
+    {
+        $var_names = array_keys($mod_map);
+        $var_vals  = array_map(
+            create_function('$value', 'return "\"$value\"";'),
+            array_values($mod_map));
+        $adv_mod = str_replace($var_names, $var_vals, $adv_mod);
+        $adv_mod = (substr($adv_mod, -1) === ';') ? $adv_mod : $adv_mod.';';
+
+        return eval('return '.$adv_mod);
     }
 }
 // END CLASS

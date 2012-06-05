@@ -86,7 +86,8 @@ class Advanced_modifiers_ext
     public function store_process_product_tax($product)
     {
         $this->EE->load->library('advanced_modifiers_parser');
-        return $this->EE->advanced_modifiers_parser->parse($product);
+        $product = $this->EE->advanced_modifiers_parser->update_product($product);
+        return $product;
     }
 
 
