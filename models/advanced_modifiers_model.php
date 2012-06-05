@@ -64,11 +64,9 @@ class Advanced_modifiers_model extends CI_Model
 
         // convert to multi dimensional array
         $result = array();
-        foreach ($query as $row)
-        {
+        foreach ($query as $row) {
             $mod_id = (int)$row['product_mod_id'];
-            if ( ! isset($result[$mod_id]))
-            {
+            if ( ! isset($result[$mod_id])) {
                 $result[$mod_id] = array(
                     'product_mod_id' => $mod_id,
                     'entry_id' => $row['entry_id'],
@@ -80,8 +78,7 @@ class Advanced_modifiers_model extends CI_Model
                 );
             }
 
-            if ( ! empty($row['product_opt_id']))
-            {
+            if ( ! empty($row['product_opt_id'])) {
                 $opt_id = (int)$row['product_opt_id'];
                 $opt_data = array(
                     'product_opt_id' => $opt_id,
@@ -113,7 +110,11 @@ class Advanced_modifiers_model extends CI_Model
             ->select('field_id')
             ->from('channel_fields')
             ->where('field_type', 'advanced_modifiers')
-            ->get()->row()->field_id;
+            ->get()->row();
+
+        if (empty($field_id)) { return ''; }
+
+        $field_id = $field_id->field_id;
 
         $advanced_modifiers = $this->db
             ->select('field_id_'.$field_id)

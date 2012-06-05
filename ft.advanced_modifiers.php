@@ -23,8 +23,6 @@ class Advanced_modifiers_ft extends EE_Fieldtype
     public function __construct()
     {
         parent::__construct();
-
-        $this->EE->load->model('advanced_modifiers_model');
     }
 
 
@@ -38,6 +36,8 @@ class Advanced_modifiers_ft extends EE_Fieldtype
      */
     public function display_field($field_data)
     {
+        $this->EE->load->model('advanced_modifiers_model');
+
         $entry_id = (int)$this->EE->input->get('entry_id');
 
         $data = array();
