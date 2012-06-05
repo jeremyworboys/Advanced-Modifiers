@@ -34,8 +34,6 @@ class Advanced_modifiers_ext
     {
         $this->EE =& get_instance();
 
-        $this->EE->load->library('advanced_modifiers_parser');
-
         $this->settings = $settings;
     }
 
@@ -71,7 +69,7 @@ class Advanced_modifiers_ext
     public function disable_extension()
     {
         $this->EE->db
-            ->where('class', __CLASS__);
+            ->where('class', __CLASS__)
             ->delete('extensions');
     }
 
@@ -87,6 +85,7 @@ class Advanced_modifiers_ext
      */
     public function store_process_product_tax($product)
     {
+        $this->EE->load->library('advanced_modifiers_parser');
         return $this->EE->advanced_modifiers_parser->parse($product);
     }
 
@@ -94,18 +93,19 @@ class Advanced_modifiers_ext
     /**
      * Template Post Parse
      *
-     * Tests to see if there is a product on this page and if so injects the
-     * JavaScript needed to override the updating of live classes.
+     * Modifies template after tag parsing to swap out the standard store
+     * JavaScript for one that handles advanced modifiers.
      *
      * @param  string    The template string after template tags have been
      *                   parsed.
-     * @param  bool      Whether or not the current template is an embed.
-     * @param  int       The site_id of the current template.
-     * @return string    The template after modification.
+     * @param  boolean   Whether or not the current template contains an embed.
+     * @param  string    The site_id of the current template
+     * @return string    The template string after modification.
      */
-    public function template_post_parse($template, $sub, $site_id)
+    public function template_post_parse($final_template, $sub, $site_id)
     {
-        return $template;
+        $final_template = str_ireplace('store/store.js', 'advanced_modifiers/advanced_modifiers.js', $final_template);
+        return $final_template;
     }
 }
 // END CLASS
