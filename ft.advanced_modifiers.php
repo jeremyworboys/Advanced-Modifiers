@@ -27,6 +27,22 @@ class Advanced_modifiers_ft extends EE_Fieldtype
 
 
     /**
+     * Replace Tag
+     *
+     * This method replaces the field tag on the frontend.
+     *
+     * @param  array     The field data (or prepped data, if using pre_process).
+     * @param  array     The field parameters (if any)
+     * @param  string    The data between tag (for tag pairs)
+     * @return string    The text/HTML to replace the tag.
+     */
+    public function replace_tag($data, $params=array(), $tagdata=FALSE)
+    {
+        return '';
+    }
+
+
+    /**
      * Display Field
      *
      * This method runs when displaying the field on the publish page in the CP.
