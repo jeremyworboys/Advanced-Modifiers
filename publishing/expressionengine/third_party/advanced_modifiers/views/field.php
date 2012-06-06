@@ -19,7 +19,15 @@
                 <?php foreach ($mod['options'] as $opt_id => $opt): ?>
                 <?= $first_line ? '' : '<tr>' ?>
                     <td style="border-left: 1px solid #d1d5de;"><?= $opt['opt_name'] ?></td>
-                    <td class="store_ft_text"><?= form_input("advanced_modifiers_field[{$opt_id}]", (isset($advanced_modifiers[$opt_id])) ? $advanced_modifiers[$opt_id] : '', 'placeholder="Use Default" autocomplete="off"') ?></td>
+                    <td class="store_ft_text">
+                        <?= form_textarea(
+                            array(
+                                'name'        => "advanced_modifiers_field[{$opt_id}]",
+                                'value'       => (isset($advanced_modifiers[$opt_id])) ? $advanced_modifiers[$opt_id] : '',
+                                'rows'        => '6',
+                                'placeholder' => 'Use Default'
+                            )) ?>
+                    </td>
                 </tr>
                 <?php $first_line = false; ?>
                 <?php endforeach ?>

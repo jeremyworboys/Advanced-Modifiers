@@ -52,6 +52,8 @@ class Advanced_modifiers_ft extends EE_Fieldtype
      */
     public function display_field($field_data)
     {
+        $this->EE->cp->add_to_head('<link rel="stylesheet" type="text/css" href="'.URL_THIRD_THEMES.'advanced_modifiers/advanced_modifiers.css" />');
+
         $this->EE->load->model('advanced_modifiers_model');
 
         $entry_id = (int)$this->EE->input->get('entry_id');
