@@ -95,10 +95,10 @@ class Advanced_modifiers_parser
         }
         else {
             foreach ($product['modifiers'] as $mod_id => &$mod) {
-                if (!in_array($mod['mod_type'], $this->modifier_types)) { continue; }
                 $first_opt = true;
                 $mod['modifier_name'] = $mod['mod_name'];
                 $mod['modifier_type'] = $mod['mod_type'];
+                if (!in_array($mod['mod_type'], $this->modifier_types)) { continue; }
                 foreach ($mod['options'] as $opt_id => &$opt) {
                     if ($first_opt) {
                         $mod['option_id'] = $opt_id;
@@ -131,7 +131,7 @@ class Advanced_modifiers_parser
      * @param  array     The product whose price to calculate.
      * @return float     The calculated price of the product.
      */
-    private function _calculate_price(&$product)
+    private function _calculate_price($product)
     {
         $price = $product['price_val'];
         $mod_map = array();
