@@ -105,6 +105,7 @@ class Advanced_modifiers_ext
      */
     public function template_post_parse($final_template, $sub, $site_id)
     {
+        $final_template = str_ireplace('store/store.min.js', 'advanced_modifiers/advanced_modifiers.min.js', $final_template);
         $final_template = str_ireplace('store/store.js', 'advanced_modifiers/advanced_modifiers.js', $final_template);
         return $final_template;
     }
