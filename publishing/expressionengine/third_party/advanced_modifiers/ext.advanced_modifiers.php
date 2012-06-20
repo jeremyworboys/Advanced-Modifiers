@@ -12,7 +12,7 @@ class Advanced_modifiers_ext
 {
 
     public $name            = 'Advanced Modifiers';
-    public $version         = '1.0';
+    public $version         = '1.1';
     public $description     = 'Extends the way you can define price modifiers in Exp:resso\'s Store Module.';
     public $settings_exist  = 'n';
     public $docs_url        = '';
