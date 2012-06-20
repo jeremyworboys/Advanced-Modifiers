@@ -14,7 +14,7 @@ class Advanced_modifiers_model extends CI_Model
     /**
      * Find Product by ID
      *
-     * This method access the store_products table and retrieves a product.
+     * This method accesses the store_products table and retrieves a product.
      *
      * @param  int       The entry ID of the product to retrieve.
      * @return mixed     The product or false if one is not found.
@@ -43,7 +43,7 @@ class Advanced_modifiers_model extends CI_Model
     /**
      * Get Product Modifiers
      *
-     * This method access the store_product_modifiers table and retrieves a
+     * This method accesses the store_product_modifiers table and retrieves a
      * product's standard modifiers.
      *
      * @param  int       The entry ID of the product to retrieve.

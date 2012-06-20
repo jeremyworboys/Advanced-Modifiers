@@ -80,7 +80,12 @@ class Advanced_modifiers_ft extends EE_Fieldtype
      */
     public function save($data)
     {
-        $field_data = $this->EE->input->post('advanced_modifiers_field', TRUE);
+        $field_data = $this->EE->input->post('advanced_modifiers', TRUE);
+
+        foreach ($field_data as $key => $value) {
+            $field_data[$key] = floatval($value);
+        }
+
         return serialize($field_data);
     }
 }

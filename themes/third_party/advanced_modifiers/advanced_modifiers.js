@@ -85,7 +85,7 @@
         for (key in defs) {
             if (defs.hasOwnProperty(key)) {
                 // Replace values with defaults only if undefined (allow empty/zero values):
-                if (object[key] == null) object[key] = defs[key];
+                if (object[key] === null) object[key] = defs[key];
             }
         }
         return object;
@@ -474,11 +474,6 @@ if (window.jQuery && window.ExpressoStore) {
                 return mod_val;
             };
 
-            // standardize modifier name
-            var standardize_name = function(name) {
-                return name.toLowerCase().replace(/[^A-Za-z0-9-]+/g, '_');
-            };
-
             // calculate the price for the current form state
             var calculatePrice = function(formdata) {
                 // check we have the necessary product data
@@ -487,22 +482,19 @@ if (window.jQuery && window.ExpressoStore) {
 
                 // add any applicable modifiers
                 var price = product.price,
-                    mod_map = {},
-                    s_name, mod_id, opt_id, option;
-                for (mod_id in product.modifiers) {
-                    opt_id = formdata["modifiers["+mod_id+"]"];
-                    option = product.modifiers[mod_id].options[opt_id];
+                    opts = [];
+                for (var mod_id in product.modifiers) {
+                    var modifier = formdata["modifiers["+mod_id+"]"];
+                    var option = product.modifiers[mod_id].options[modifier];
                     if (option) {
-                        s_name = standardize_name(product.modifiers[mod_id].mod_name);
-                        mod_map[s_name] = option.opt_name;
+                        opts.push(option.product_opt_id);
+                        // price += option.opt_price_mod_val;
                     }
                 }
-                for (mod_id in product.modifiers) {
-                    opt_id = formdata["modifiers["+mod_id+"]"];
-                    option = product.modifiers[mod_id].options[opt_id];
-                    if (option) {
-                        price += evaluateAdvancedModifier(option.adv_mod, mod_map);
-                    }
+
+                var id = opts.join('-');
+                if (product['stock'][0]['advanced_modifiers'][id]) {
+                    price += product['stock'][0]['advanced_modifiers'][id];
                 }
 
                 return price;

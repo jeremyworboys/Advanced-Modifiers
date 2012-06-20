@@ -1,6 +1,7 @@
 
     <p style="margin-bottom:0.5em;">You need to enter the modifiers in the <strong>Product Details</strong> area and submit before they will become available here.</p>
 
+
     <?php if (isset($product) && !empty($product['modifiers'])): ?>
     <table class="store_ft adv_mod">
         <thead>
@@ -13,14 +14,14 @@
             </tr>
         </thead>
         <tbody>
-            <?= display_rows($product['modifiers']) ?>
+            <?= display_rows($product['modifiers'], $advanced_modifiers) ?>
         </tbody>
     </table>
     <?php endif ?>
 
 <?php
 
-function display_rows($modifiers, $p=array())
+function display_rows($modifiers, $advanced_modifiers, $p=array())
 {
     $out = '';
     $mod = array_shift($modifiers);
@@ -33,12 +34,12 @@ function display_rows($modifiers, $p=array())
         $out .=         $opt['opt_name'];
         $out .=     '</td>';
     if ($rowcount > 1) {
-        $out .=         display_rows($modifiers, $p);
+        $out .=         display_rows($modifiers, $advanced_modifiers, $p);
     } else {
         $out .=     '<td class="store_ft_text">';
         $out .=         form_input(array(
                             'name' => "advanced_modifiers[$id]",
-                            'value' => (isset($advanced_modifiers[$id])) ? $advanced_modifiers[$id] : '0.00'
+                            'value' => number_format((isset($advanced_modifiers[$id])) ? $advanced_modifiers[$id] : 0, 2)
                         ));
         $out .=     '</td>';
     }
