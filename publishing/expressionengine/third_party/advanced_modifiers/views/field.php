@@ -1,5 +1,6 @@
 
-    <p style="margin-bottom:0.5em;">You need to enter the modifiers in the <strong>Product Details</strong> area and submit before they will become available here.</p>
+    <p style="margin-bottom:0.5em;">You need to enter the modifiers in the <strong>Product Details</strong> area and click <strong>Submit</strong> or <strong>Save Revision</strong> before they will become available here.</p>
+    <p style="margin-bottom:0.5em;">The price entered in the value field will be added to the price in the <strong>Product Details</strong> area.</p>
 
 
     <?php if (isset($product) && !empty($product['modifiers'])): ?>

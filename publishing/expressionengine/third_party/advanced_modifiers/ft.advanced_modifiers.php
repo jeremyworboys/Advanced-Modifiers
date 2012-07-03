@@ -73,7 +73,8 @@ class Advanced_modifiers_ft extends EE_Fieldtype
     /**
      * Prepare for Saving the Field
      *
-     * This method runs when displaying the field on the publish page in the CP.
+     * This method prepares the data to be saved to the entries table in the
+     * database.
      *
      * @param  array     The data entered into this field.
      * @return string    The data to be stored in the database.
@@ -82,8 +83,10 @@ class Advanced_modifiers_ft extends EE_Fieldtype
     {
         $field_data = $this->EE->input->post('advanced_modifiers', TRUE);
 
-        foreach ($field_data as $key => $value) {
-            $field_data[$key] = floatval($value);
+        if (is_array($field_data)) {
+            foreach ($field_data as $key => $value) {
+                $field_data[$key] = floatval($value);
+            }
         }
 
         return serialize($field_data);
