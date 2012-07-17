@@ -75,13 +75,14 @@ class Advanced_modifiers_parser
             // Product is being added to the cart; use the values selected by
             //  the customer
             foreach ($product['modifiers'] as $mod) {
-                if (in_array($mod['mod_type'], $this->modifier_types)) {
+                if (in_array($mod['modifier_type'], $this->modifier_types)) {
                     $p[] = $mod['option_id'];
                 }
             }
         }
         else {
-            // The product is being displayed, use the first options available
+            // The product is being displayed, use the first option values
+            //  available
             foreach ($product['modifiers'] as $mod) {
                 if (in_array($mod['mod_type'], $this->modifier_types)) {
                     $p[] = $mod['options'][key($mod['options'])]['product_opt_id'];
