@@ -17,7 +17,7 @@ class Advanced_modifiers_ext {
     public $version         = ADVANCED_MODIFIERS_VERSION;
     public $description     = 'Extends the way you can define price modifiers in Exp:resso\'s Store Module.';
     public $settings_exist  = 'y';
-    public $docs_url        = http://complexcompulsions.com/add-ons/advanced-modifiers/;
+    public $docs_url        = 'http://complexcompulsions.com/add-ons/advanced-modifiers/';
 
     protected $settings     = array();
 

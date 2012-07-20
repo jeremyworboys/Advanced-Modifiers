@@ -14,9 +14,9 @@ require PATH_THIRD.'advanced_modifiers/config.php';
 class Advanced_modifiers_ft extends EE_Fieldtype {
 
     public $info = array(
-        'name'    = ADVANCED_MODIFIERS_NAME,
-        'version' = ADVANCED_MODIFIERS_VERSION
-    )
+        'name'    => ADVANCED_MODIFIERS_NAME,
+        'version' => ADVANCED_MODIFIERS_VERSION
+    );
 
 
     /**
