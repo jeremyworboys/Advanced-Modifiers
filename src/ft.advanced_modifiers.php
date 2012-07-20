@@ -1,40 +1,33 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+require PATH_THIRD.'advanced_modifiers/config.php';
 
 /**
- * Advanced Modifiers Extension class
+ * Advanced Modifiers
  *
  * @package    advanced_modifiers
  * @author     Jeremy Worboys <jeremy@complexcompulsions.com>
- * @link       http://complexcompulsions.com
- * @copyright  Copyright (c) 2012, Jeremy Worboys
+ * @link       http://complexcompulsions.com/add-ons/advanced-modifiers/
+ * @copyright  Copyright (c) 2012 Jeremy Worboys
+ * @license    Licensed under the ☺ license.
  */
-class Advanced_modifiers_ft extends EE_Fieldtype
-{
+class Advanced_modifiers_ft extends EE_Fieldtype {
 
-    public $info = array (
-            'name'    => 'Advanced Modifiers',
-            'version' => '1.0'
-        );
-
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    public $info = array(
+        'name'    => ADVANCED_MODIFIERS_NAME,
+        'version' => ADVANCED_MODIFIERS_VERSION
+    );
 
 
     /**
      * Replace Tag
      *
-     * This method replaces the field tag on the frontend.
+     * This method replaces the field tag on the front-end.
      *
-     * @param  array     The field data (or prepped data, if using pre_process).
-     * @param  array     The field parameters (if any)
-     * @param  string    The data between tag (for tag pairs)
-     * @return string    The text/HTML to replace the tag.
+     * @param  array  The field data (or prepped data, if using pre_process).
+     * @param  array  The field parameters (if any)
+     * @param  string The data between tag (for tag pairs)
+     * @return string The text/HTML to replace the tag.
      */
     public function replace_tag($data, $params=array(), $tagdata=FALSE)
     {
@@ -47,8 +40,8 @@ class Advanced_modifiers_ft extends EE_Fieldtype
      *
      * This method runs when displaying the field on the publish page in the CP.
      *
-     * @param  array     The data previously entered into this field.
-     * @return string    The HTML output to be displayed for this field.
+     * @param  array  The data previously entered into this field.
+     * @return string The HTML output to be displayed for this field.
      */
     public function display_field($field_data)
     {
@@ -76,8 +69,8 @@ class Advanced_modifiers_ft extends EE_Fieldtype
      * This method prepares the data to be saved to the entries table in the
      * database.
      *
-     * @param  array     The data entered into this field.
-     * @return string    The data to be stored in the database.
+     * @param  array  The data entered into this field.
+     * @return string The data to be stored in the database.
      */
     public function save($data)
     {

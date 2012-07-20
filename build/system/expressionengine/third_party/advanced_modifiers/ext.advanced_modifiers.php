@@ -1,21 +1,23 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+require PATH_THIRD.'advanced_modifiers/config.php';
 
 /**
- * Advanced Modifiers Extension class
+ * Advanced Modifiers
  *
  * @package    advanced_modifiers
  * @author     Jeremy Worboys <jeremy@complexcompulsions.com>
- * @link       http://complexcompulsions.com
- * @copyright  Copyright (c) 2012, Jeremy Worboys
+ * @link       http://complexcompulsions.com/add-ons/advanced-modifiers/
+ * @copyright  Copyright (c) 2012 Jeremy Worboys
+ * @license    Licensed under the ☺ license.
  */
-class Advanced_modifiers_ext
-{
+class Advanced_modifiers_ext {
 
-    public $name            = 'Advanced Modifiers';
-    public $version         = '1.1';
+    public $name            = ADVANCED_MODIFIERS_NAME;
+    public $version         = ADVANCED_MODIFIERS_VERSION;
     public $description     = 'Extends the way you can define price modifiers in Exp:resso\'s Store Module.';
-    public $settings_exist  = 'n';
-    public $docs_url        = '';
+    public $settings_exist  = 'y';
+    public $docs_url        = http://complexcompulsions.com/add-ons/advanced-modifiers/;
 
     protected $settings     = array();
 
@@ -28,7 +30,7 @@ class Advanced_modifiers_ext
     /**
      * Constructor
      *
-     * @param  mixed     Settings array or empty string if none exist.
+     * @param mixed Settings array or empty string if none exist.
      */
     public function __construct($settings='')
     {
