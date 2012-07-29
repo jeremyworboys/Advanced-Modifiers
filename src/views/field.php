@@ -53,9 +53,19 @@ function display_rows($modifiers, $advanced_modifiers, $p=array())
 
 function row_count($modifiers)
 {
-    $count = 1;
+    // Map ( row_order ) => number_of_options
+    $map = array();
     foreach ($modifiers as $mod) {
-        $count *= count($mod['options']);
+        $map[$mod['mod_order']] = count($mod['options']);
     }
-    return $count + floor($count / 2); // Don't ask, seriously
+    // Sort by row_order
+    krsort($map);
+
+    // Calculate rowspan
+    $count = 1;
+    foreach ($map as $rows) {
+        $count = $rows * $count + 1;
+    }
+
+    return $count;
 }
