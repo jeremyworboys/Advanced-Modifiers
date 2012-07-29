@@ -6,7 +6,7 @@ $addon_name = basename(dirname(__FILE__));
 $has_themes = (file_exists('src/theme') && is_dir('src/theme'));
 
 
-// VERSSION
+// VERSION
 echo "Trying to determine build version...\n";
 preg_match('/[0-9a-f]{7} [(](?:HEAD, )?tag: v([^,)]+)/', `git log --oneline --decorate`, $m);
 
