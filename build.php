@@ -8,7 +8,7 @@ $has_themes = (file_exists('src/theme') && is_dir('src/theme'));
 
 // VERSSION
 echo "Trying to determine build version...\n";
-preg_match('/[0-9a-f]{7} [(](?:HEAD, )?tag: v([^,]+)/', `git log --oneline --decorate`, $m);
+preg_match('/[0-9a-f]{7} [(](?:HEAD, )?tag: v([^,)]+)/', `git log --oneline --decorate`, $m);
 
 if (isset($m[1])) {
     $version = $m[1];
@@ -48,5 +48,6 @@ echo "\n";
 
 // ZIP
 echo "Zipping build...\n";
-`cd build; zip -r $addon_name-$version.zip *`;
+`cd build`;
+`zip -r $addon_name-$version.zip *`;
 
