@@ -484,7 +484,7 @@ if (window.jQuery && window.ExpressoStore) {
                 var price = product.price,
                     opts = [];
                 for (var mod_id in product.modifiers) {
-                    var modifier = formdata["modifiers["+mod_id+"]"];
+                    var modifier = formdata["modifiers_"+mod_id];
                     var option = product.modifiers[mod_id].options[modifier];
                     if (option) {
                         opts.push(option.product_opt_id);
@@ -494,7 +494,7 @@ if (window.jQuery && window.ExpressoStore) {
 
                 var id = opts.join('-');
                 if (product['stock'][0]['advanced_modifiers'][id]) {
-                    price += product['stock'][0]['advanced_modifiers'][id];
+                    price = product['stock'][0]['advanced_modifiers'][id];
                 }
 
                 return price;
