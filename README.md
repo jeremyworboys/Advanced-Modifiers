@@ -1,4 +1,4 @@
-<div style="color:red;font-weight:bold;text-transform:uppercase">This package is not under active development and no support is offered</div>
+**This package is not under active development and no support is offered**
 
 # Advanced Modifiers
 
