@@ -73,7 +73,7 @@ class Advanced_modifiers_model extends CI_Model
                     'mod_type' => $row['mod_type'],
                     'mod_name' => $row['mod_name'],
                     'mod_instructions' => $row['mod_instructions'],
-                    'mod_order' => $row['mod_order'],
+                    'mod_order' => intval($row['mod_order']),
                     'options' => array()
                 );
             }

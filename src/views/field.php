@@ -40,7 +40,7 @@ function display_rows($modifiers, $advanced_modifiers, $p=array())
         $out .=     '<td class="store_ft_text">';
         $out .=         form_input(array(
                             'name' => "advanced_modifiers[$id]",
-                            'value' => number_format((isset($advanced_modifiers[$id])) ? $advanced_modifiers[$id] : 0, 2)
+                            'value' => (isset($advanced_modifiers[$id])) ? $advanced_modifiers[$id] : 0
                         ));
         $out .=     '</td>';
     }

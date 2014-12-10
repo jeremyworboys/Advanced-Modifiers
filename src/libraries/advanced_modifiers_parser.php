@@ -113,8 +113,13 @@ class Advanced_modifiers_parser
      */
     private function update_prices($product, $price)
     {
-        // Calculate the tax rate as it is not stored in the product object
-        $tax_rate = $product['tax_exempt'] ? 0 : ($product['price_inc_tax_val'] / $product['price_val']) - 1;
+        if ($product['price_val'] == 0) {
+            $tax_rate = 0.1;
+        }
+        else {
+            // Calculate the tax rate as it is not stored in the product object
+            $tax_rate = $product['tax_exempt'] ? 0 : ($product['price_inc_tax_val'] / $product['price_val']) - 1;
+        }
 
         // Update prices
         $product['price_val']                 = $price;

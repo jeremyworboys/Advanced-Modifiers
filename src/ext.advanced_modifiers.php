@@ -16,7 +16,7 @@ class Advanced_modifiers_ext {
     public $name            = ADVANCED_MODIFIERS_NAME;
     public $version         = ADVANCED_MODIFIERS_VERSION;
     public $description     = 'Extends the way you can define price modifiers in Exp:resso\'s Store Module.';
-    public $settings_exist  = 'y';
+    public $settings_exist  = 'n';
     public $docs_url        = 'http://complexcompulsions.com/add-ons/advanced-modifiers/';
 
     protected $settings     = array();
@@ -107,8 +107,11 @@ class Advanced_modifiers_ext {
      */
     public function template_post_parse($final_template, $sub, $site_id)
     {
-        $final_template = str_ireplace('store/store.min.js', 'advanced_modifiers/advanced_modifiers.min.js', $final_template);
-        $final_template = str_ireplace('store/store.js', 'advanced_modifiers/advanced_modifiers.js', $final_template);
+        $time = filemtime(APPPATH . '/../../themes/third_party/advanced_modifiers/advanced_modifiers.js');
+
+        $final_template = str_ireplace('store/store.min.js', "advanced_modifiers/advanced_modifiers.{$time}.js", $final_template);
+        $final_template = str_ireplace('store/store.js', "advanced_modifiers/advanced_modifiers.{$time}.js", $final_template);
+
         return $final_template;
     }
 }

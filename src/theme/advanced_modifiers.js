@@ -468,7 +468,6 @@ if (window.jQuery && window.ExpressoStore) {
                     mod_val = parseFloat(f(mod_map));
                 }
                 catch (e) {
-                    console.log(adv_mod, mod_map, e);
                     mod_val = 0;
                 }
                 return mod_val;
@@ -482,17 +481,24 @@ if (window.jQuery && window.ExpressoStore) {
 
                 // add any applicable modifiers
                 var price = product.price,
-                    opts = [];
-                for (var mod_id in product.modifiers) {
-                    var modifier = formdata["modifiers_"+mod_id];
-                    var option = product.modifiers[mod_id].options[modifier];
+                    opts = [],
+                    mod_id,
+                    modifier,
+                    order,
+                    option;
+
+                for (mod_id in product.modifiers) {
+                    modifier = formdata["modifiers_"+mod_id];
+                    order = parseInt(product.modifiers[mod_id].mod_order, 10);
+                    option = product.modifiers[mod_id].options[modifier];
                     if (option) {
-                        opts.push(option.product_opt_id);
-                        // price += option.opt_price_mod_val;
+                        opts[order] = option.product_opt_id;
                     }
                 }
 
-                var id = opts.join('-');
+                // array filter reindexes the array
+                var id = opts.filter(function (x) {return !!x}).join('-');
+
                 if (product['stock'][0]['advanced_modifiers'][id]) {
                     price = product['stock'][0]['advanced_modifiers'][id];
                 }
