@@ -1,0 +1,62 @@
+#!/bin/bash
+
+ADDON_NAME=${PWD##*/}
+
+# VERSION
+echo "Trying to determine release version..."
+VERSION=`git describe --abbrev=0 --tags`
+
+if [ $? -eq 0 ]; then
+    echo "Found version $VERSION..."
+    echo
+else
+    echo "Could not determine version..."
+    echo "Exiting..."
+    exit 1
+fi
+
+# PREP
+if [ -f $ADDON_NAME-$VERSION.zip ]; then
+    echo "Removing previous $VERSION build..."
+    rm -f $ADDON_NAME-$VERSION.zip
+fi
+
+echo "Creating clean structure..."
+mkdir -p release/system/expressionengine/third_party
+echo
+
+
+# ADD-ON
+echo "Copying and renaming..."
+cp -R src/ release/system/expressionengine/third_party/$ADDON_NAME
+echo
+
+
+# THEME
+if [ -d "src/theme" ]; then
+    echo "Creating theme structure..."
+    mkdir -p release/themes/third_party
+
+    echo "Moving theme into place..."
+    mv release/system/expressionengine/third_party/$ADDON_NAME/theme release/themes/third_party/$ADDON_NAME
+else
+    echo "No theme directory found..."
+fi
+echo
+
+
+# ZIP
+echo "Zipping release..."
+cd release
+zip -rq $ADDON_NAME-$VERSION.zip *
+zip -dq $ADDON_NAME-$VERSION.zip \*.coffee
+cd ..
+echo
+
+# CLEAN UP
+echo "Cleaning up..."
+mv release/$ADDON_NAME-$VERSION.zip .
+rm -rf release/
+echo
+
+echo "Done!"
